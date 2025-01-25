@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>2082</width>
+    <height>1031</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>2081</width>
+      <height>971</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:grey;</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>10</y>
+       <width>311</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Realtime Digital Filter</string>
+     </property>
+    </widget>
+    <widget class="QFrame" name="frame">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>611</width>
+       <height>891</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:grey;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QWidget" name="Z_widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>571</width>
+        <height>371</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="widget_3" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>500</y>
+        <width>571</width>
+        <height>371</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:#9e9e9e;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: white;</string>
+      </property>
+      <widget class="QRadioButton" name="Button_Zero">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>90</y>
+         <width>95</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;</string>
+       </property>
+       <property name="text">
+        <string>Zero</string>
+       </property>
+      </widget>
+      <widget class="QRadioButton" name="button_Pole">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>90</y>
+         <width>95</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;</string>
+       </property>
+       <property name="text">
+        <string>Pole</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="button_ClearZeros">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>140</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Clear Zeros</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="button_ClearPoles">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>140</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Clear Poles</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Button_Undo">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>200</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Undo</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Button_Clear">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>200</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Clear</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Button_Redo">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>200</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Redo</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="button_Save">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>270</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="Button_Export">
+       <property name="geometry">
+        <rect>
+         <x>220</x>
+         <y>320</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Export</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>40</y>
+         <width>161</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;
+</string>
+       </property>
+       <property name="text">
+        <string>Add Conjugates</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>20</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Z - pole</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>650</x>
+       <y>60</y>
+       <width>611</width>
+       <height>891</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:grey;</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QWidget" name="widget_Mag" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>571</width>
+        <height>371</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="widget_2" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>500</y>
+        <width>571</width>
+        <height>371</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>20</y>
+        <width>191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Magnitude Response</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>460</y>
+        <width>191</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Phase Response</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_3">
+     <property name="geometry">
+      <rect>
+       <x>1290</x>
+       <y>60</y>
+       <width>611</width>
+       <height>891</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:#9e9e9e;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: white;
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QWidget" name="Widget_RealSignal" native="true">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>50</y>
+        <width>521</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="Widget_FilteredSignal" native="true">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>350</y>
+        <width>521</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="widget_8" native="true">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>630</y>
+        <width>521</width>
+        <height>231</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:grey;</string>
+      </property>
+      <widget class="QPushButton" name="Button_Load">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>190</y>
+         <width>93</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Load Signal</string>
+       </property>
+      </widget>
+      <widget class="QWidget" name="Widget_Touchpad" native="true">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>60</y>
+         <width>461</width>
+         <height>121</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>20</y>
+         <width>91</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;</string>
+       </property>
+       <property name="text">
+        <string>Touch Pad</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>10</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border:none;</string>
+      </property>
+      <property name="text">
+       <string>Real Signal</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>310</y>
+        <width>111</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border:none;</string>
+      </property>
+      <property name="text">
+       <string>Filtered Signal</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>2082</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
