@@ -17,8 +17,8 @@
    <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
+      <x>-10</x>
+      <y>-10</y>
       <width>2081</width>
       <height>971</height>
      </rect>
@@ -64,24 +64,6 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QWidget" name="Z_widget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>60</y>
-        <width>571</width>
-        <height>371</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:white;
-border-radius:20px;
-border-style: solid;
-border-width: 1px;
-border-color: black;
-</string>
-      </property>
-     </widget>
      <widget class="QWidget" name="widget_3" native="true">
       <property name="geometry">
        <rect>
@@ -119,7 +101,7 @@ border-color: white;</string>
         <string>Zero</string>
        </property>
       </widget>
-      <widget class="QRadioButton" name="button_Pole">
+      <widget class="QRadioButton" name="Button_Pole">
        <property name="geometry">
         <rect>
          <x>360</x>
@@ -329,7 +311,7 @@ color:white;</string>
         <string>Export</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QCheckBox" name="add_conjugates">
        <property name="geometry">
         <rect>
          <x>210</x>
@@ -346,11 +328,32 @@ color:white;</string>
         <string>Add Conjugates</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="Button_Swap">
+       <property name="geometry">
+        <rect>
+         <x>230</x>
+         <y>140</y>
+         <width>93</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <property name="text">
+        <string>Swap</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QLabel" name="label_5">
       <property name="geometry">
        <rect>
-        <x>40</x>
+        <x>260</x>
         <y>20</y>
         <width>91</width>
         <height>31</height>
@@ -363,6 +366,33 @@ color:white;</string>
       </property>
       <property name="text">
        <string>Z - pole</string>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="circle_graph">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>60</y>
+        <width>400</width>
+        <height>400</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+      <property name="foregroundBrush">
+       <brush brushstyle="NoBrush">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
       </property>
      </widget>
     </widget>
@@ -384,42 +414,6 @@ color:white;</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QWidget" name="widget_Mag" native="true">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>60</y>
-        <width>571</width>
-        <height>371</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:white;
-border-radius:20px;
-border-style: solid;
-border-width: 1px;
-border-color: black;
-</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="widget_2" native="true">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>500</y>
-        <width>571</width>
-        <height>371</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:white;
-border-radius:20px;
-border-style: solid;
-border-width: 1px;
-border-color: black;
-</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="label_6">
       <property name="geometry">
        <rect>
@@ -456,6 +450,60 @@ border-color: black;
        <string>Phase Response</string>
       </property>
      </widget>
+     <widget class="PlotWidget" name="Mag_Graph">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>591</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+      <property name="foregroundBrush">
+       <brush brushstyle="NoBrush">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="Phase_Graph">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>520</y>
+        <width>581</width>
+        <height>361</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+      <property name="foregroundBrush">
+       <brush brushstyle="NoBrush">
+        <color alpha="255">
+         <red>255</red>
+         <green>255</green>
+         <blue>255</blue>
+        </color>
+       </brush>
+      </property>
+     </widget>
     </widget>
     <widget class="QFrame" name="frame_3">
      <property name="geometry">
@@ -480,42 +528,6 @@ border-color: white;
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QWidget" name="Widget_RealSignal" native="true">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>50</y>
-        <width>521</width>
-        <height>251</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:white;
-border-radius:20px;
-border-style: solid;
-border-width: 1px;
-border-color: black;
-</string>
-      </property>
-     </widget>
-     <widget class="QWidget" name="Widget_FilteredSignal" native="true">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>350</y>
-        <width>521</width>
-        <height>251</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:white;
-border-radius:20px;
-border-style: solid;
-border-width: 1px;
-border-color: black;
-</string>
-      </property>
-     </widget>
      <widget class="QWidget" name="widget_8" native="true">
       <property name="geometry">
        <rect>
@@ -637,6 +649,42 @@ border-color: black;
        <string>Filtered Signal</string>
       </property>
      </widget>
+     <widget class="PlotWidget" name="Real_Signal">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>531</width>
+        <height>261</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="Filtered_Signal">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>350</y>
+        <width>541</width>
+        <height>271</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white;
+border-radius:20px;
+border-style: solid;
+border-width: 1px;
+border-color: black;
+</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -652,6 +700,14 @@ border-color: black;
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
