@@ -13,7 +13,7 @@ import matplotlib
 import pyqtgraph as pg
 import pandas as pd
 import re
-# from main import MainWindow
+# from Main import  plot_frequency_response_phase
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from scipy import signal
 matplotlib.use('Qt5Agg')
@@ -97,9 +97,9 @@ class MyDialog(QtWidgets.QDialog):
         self.layout1 = QtWidgets.QVBoxLayout()
         self.layout1.addWidget(self.canvas1)
         self.layout1.setContentsMargins(0, 0, 0, 0)
-        self.main = main
+        self.main =main
 
-        # self.pushButton_4.clicked.connect(lambda: self.main.plot_frequency_response_phase(self.canvas_phase, self.main.phase_responce_graph, self.layout_phase, flag = True))
+        self.pushButton_4.clicked.connect(lambda: self.main.plot_frequency_response_phase(flag = True))
 
         self.canvas2 = MplCanvas(self, width=5, height=4, dpi=100)
         self.layout2 = QtWidgets.QVBoxLayout()

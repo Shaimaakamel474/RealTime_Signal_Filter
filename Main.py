@@ -25,7 +25,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.utils import simpleSplit
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from AllPass import MyDialog
+from AllPass import MyDialog as Allpass
 import csv
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=7, height=4, dpi=100):
@@ -70,7 +70,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Combox_Generat_C_code.currentIndexChanged.connect(lambda : self.realize_and_export())
                 # Plot unit circle
         self.plot_unit_circle()
-        
+
+        self.pasez = Allpass(self)
+
         self.zeros = []     
         self.poles = []
 
@@ -97,7 +99,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas1.mpl_connect('motion_notify_event', self.on_motion)
         self.canvas1.mpl_connect('button_release_event', self.on_release)
        
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
 
 
 
@@ -207,17 +210,14 @@ class MainWindow(QtWidgets.QMainWindow):
         # Refresh the canvas to display the updated plot
         self.canvas1.draw()
 
-
-
-    def plot_frequency_response(self):
-        # Convert zeros and poles to complex numbers
+##############################################################################################################################
+    def plot_frequency_response_mag(self):
+        # Create a system from zeros and poles
         zeros = [complex(x, y) for x, y in self.zeros_postions]
         poles = [complex(x, y) for x, y in self.poles_postions]
-        
-        # Create frequency response using freqz_zpk from scipy
-        w, h = signal.freqz_zpk(zeros, poles, 1.0)  # Frequency and response
-        
-        # Magnitude Response
+
+        w, h = signal.freqz_zpk(zeros, poles, 1.0)
+        # Plot the magnitude response
         self.canvas_mag.axes.set_facecolor('white')
         self.canvas_mag.axes.clear()  # Clear the previous plot
         self.canvas_mag.axes.semilogx(w, abs(h))  # Magnitude in dB
@@ -227,18 +227,100 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas_mag.axes.grid(True)
         self.canvas_mag.axes.set_xlim(1e-2, 10)  # Log scale for frequency
         self.canvas_mag.draw()  # Redraw the canvas
+
+
+    def plot_frequency_response_phase(self,  flag=False):
+        # Create a system from zeros and poles
+        zeros = [complex(x, y) for x, y in self.zeros_postions]
+        poles = [complex(x, y) for x, y in self.poles_postions]
+        print("zeros complex : ", zeros)
+        print("poles complex : ", poles)
+
+        if flag:
+            # Extend zeros and poles lists with self.pasez.b and self.pasez.a  
+            print("flag : ", flag)
+            self.pasez.plot_final_phase_gain()
+            zeros.extend(self.pasez.x_b_complex)
+            poles.extend(self.pasez.y_a_complex)
+            # print("a", self.pasez.x_b_complex)
+            # print("b", self.pasez.y_a_complex)
+            # print("zeros after extend : ", zeros)
+            # print("poles after extend : ", poles)
+
+            w, h = signal.freqz_zpk(zeros, poles, 1.0)
+            phase = np.unwrap(np.angle(h))
+            # print("c : ", w)
+            # print("f : ", h)
+
+
+            self.layout_phase.removeWidget(self.canvas_phase)
+            self.canvas_phase = MplCanvas(self, width=5, height=4, dpi=100)
+            # self.layout_phase = QtWidgets.QVBoxLayout()
+            self.layout_phase.addWidget(self.canvas_phase)
+
+            # Plot the phase response
+            self.canvas_phase.axes.clear()
+            self.canvas_phase.axes.semilogx(w, phase)
+            self.canvas_phase.axes.set_xlabel('Frequency')
+            self.canvas_phase.axes.set_ylabel('Phase (degrees)')
+            self.canvas_phase.axes.set_title('Phase Response')
+            self.canvas_phase.axes.grid()
+            self.canvas_phase.axes.set_xlim(0, 10)
+            self.canvas_phase.draw()
+
+
+        else:
+            print("zeros : ", zeros)
+            print("poles : ", poles)
+
+            # Compute the frequency response
+            w, h = signal.freqz_zpk(zeros, poles, 1.0)
+
+            # print("w : ", w)
+            # print("h : ", h)
+
+            # Phase Response
+            self.canvas_phase.axes.clear()  # Clear previous phase plot
+            self.canvas_phase.axes.semilogx(w, np.angle(h, deg=True))  # Phase in degrees
+            self.canvas_phase.axes.set_xlabel('Frequency (Hz)')
+            self.canvas_phase.axes.set_ylabel('Phase (degrees)')
+            self.canvas_phase.axes.set_title('Phase Response')
+            self.canvas_phase.axes.grid(True)
+            self.canvas_phase.axes.set_xlim(1e-2, 10)  # Log scale for frequency
+            self.canvas_phase.draw()  # Redraw the phase canvas
+
+################################################################################################################################
+
+    # def plot_frequency_response(self):
+    #     # Convert zeros and poles to complex numbers
+    #     zeros = [complex(x, y) for x, y in self.zeros_postions]
+    #     poles = [complex(x, y) for x, y in self.poles_postions]
+        
+    #     # Create frequency response using freqz_zpk from scipy
+    #     w, h = signal.freqz_zpk(zeros, poles, 1.0)  # Frequency and response
+        
+    #     # Magnitude Response
+    #     self.canvas_mag.axes.set_facecolor('white')
+    #     self.canvas_mag.axes.clear()  # Clear the previous plot
+    #     self.canvas_mag.axes.semilogx(w, abs(h))  # Magnitude in dB
+    #     self.canvas_mag.axes.set_xlabel('Frequency (Hz)')
+    #     self.canvas_mag.axes.set_ylabel('Magnitude (dB)')
+    #     self.canvas_mag.axes.set_title('Magnitude Response')
+    #     self.canvas_mag.axes.grid(True)
+    #     self.canvas_mag.axes.set_xlim(1e-2, 10)  # Log scale for frequency
+    #     self.canvas_mag.draw()  # Redraw the canvas
         
   
         
-        # Phase Response
-        self.canvas_phase.axes.clear()  # Clear previous phase plot
-        self.canvas_phase.axes.semilogx(w, np.angle(h, deg=True))  # Phase in degrees
-        self.canvas_phase.axes.set_xlabel('Frequency (Hz)')
-        self.canvas_phase.axes.set_ylabel('Phase (degrees)')
-        self.canvas_phase.axes.set_title('Phase Response')
-        self.canvas_phase.axes.grid(True)
-        self.canvas_phase.axes.set_xlim(1e-2, 10)  # Log scale for frequency
-        self.canvas_phase.draw()  # Redraw the phase canvas
+    #     # Phase Response
+    #     self.canvas_phase.axes.clear()  # Clear previous phase plot
+    #     self.canvas_phase.axes.semilogx(w, np.angle(h, deg=True))  # Phase in degrees
+    #     self.canvas_phase.axes.set_xlabel('Frequency (Hz)')
+    #     self.canvas_phase.axes.set_ylabel('Phase (degrees)')
+    #     self.canvas_phase.axes.set_title('Phase Response')
+    #     self.canvas_phase.axes.grid(True)
+    #     self.canvas_phase.axes.set_xlim(1e-2, 10)  # Log scale for frequency
+    #     self.canvas_phase.draw()  # Redraw the phase canvas
         
 
 
@@ -301,7 +383,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.poles.append((marker, None))
                 self.poles_postions.append((x, y))
         self.canvas1.draw()
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
 
 
     def delete_selected(self, event):
@@ -342,7 +425,8 @@ class MainWindow(QtWidgets.QMainWindow):
                     closest_marker[1].remove()  # Remove conjugate marker if it exists
 
         self.canvas1.draw()
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
         # self.plot_frequency_response_phase(self.canvas_phase, self.phase_responce_graph, self.layout_phase, flag=False)
     
  
@@ -367,14 +451,16 @@ class MainWindow(QtWidgets.QMainWindow):
                     if pole[1] is not None :self.canvas1.axes.add_artist(pole[1])  #check if there conj
         
         self.canvas1.draw()
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
 
     def delete_zeros(self):
         # Delete all zeros on the plot      
         self.zeros = []
         self.zeros_postions = []
         self.redraw_plot(delete_zeros=True)
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
        
 
     def delete_poles(self):
@@ -382,7 +468,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.poles = []
         self.poles_postions = []
         self.redraw_plot(delete_poles=True)
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
        
 
     def delete_all(self):
@@ -392,8 +479,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.poles = []
         self.poles_postions = []
         self.redraw_plot()
-        self.plot_frequency_response()
-    
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
 
     def Delete_Options(self):
         state=self.Delete_combox.currentText()
@@ -427,7 +514,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.poles, self.poles_postions=poles, poles_postions
         self.comboBox_swap.setCurrentIndex(0)
         self.canvas1.draw()  # Redraw the canvas with updated markers
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
 
     def convert_poles_to_zeros(self):
                 # Clear existing markers
@@ -636,7 +724,8 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.canvas_phase.axes.clear()
 
                     # Plot magnitude and phase responses
-                    self.plot_frequency_response()
+                    self.plot_frequency_response_mag()
+                    self.plot_frequency_response_phase()
                     
 
                     # Redraw canvas
@@ -652,7 +741,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.selected_primary_marker = None
             self.offset = (0, 0)
             self.dragging_marker = False
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
         
     
     def Display_Filters(self):
@@ -731,7 +821,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas1.draw()
 
         # Plot the frequency response (make sure this function exists and works as expected)
-        self.plot_frequency_response()
+        self.plot_frequency_response_mag()
+        self.plot_frequency_response_phase()
 
     
     def get_filter_data(self):
@@ -1020,7 +1111,7 @@ int main() {{
 
 
     def Open_Second_Window(self):
-        main = MyDialog(QtWidgets.QDialog)
+        main = Allpass(self)
         main.exec_()
 
 
