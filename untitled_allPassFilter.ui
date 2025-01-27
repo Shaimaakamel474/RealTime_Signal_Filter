@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1933</width>
-    <height>986</height>
+    <width>1439</width>
+    <height>789</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,7 +31,7 @@
         <x>20</x>
         <y>10</y>
         <width>361</width>
-        <height>951</height>
+        <height>751</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -44,8 +44,8 @@ border-color: white;</string>
       <widget class="QWidget" name="widget_4" native="true">
        <property name="geometry">
         <rect>
-         <x>29</x>
-         <y>120</y>
+         <x>30</x>
+         <y>60</y>
          <width>301</width>
          <height>261</height>
         </rect>
@@ -123,7 +123,7 @@ color:white;</string>
        <property name="geometry">
         <rect>
          <x>30</x>
-         <y>490</y>
+         <y>360</y>
          <width>301</width>
          <height>311</height>
         </rect>
@@ -257,10 +257,10 @@ color:white;</string>
      <widget class="QWidget" name="widget_2" native="true">
       <property name="geometry">
        <rect>
-        <x>410</x>
+        <x>390</x>
         <y>10</y>
-        <width>501</width>
-        <height>951</height>
+        <width>351</width>
+        <height>751</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -273,8 +273,8 @@ border-color: white;</string>
       <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
-         <x>170</x>
-         <y>30</y>
+         <x>100</x>
+         <y>40</y>
          <width>161</width>
          <height>16</height>
         </rect>
@@ -300,8 +300,8 @@ color:Black
         <rect>
          <x>20</x>
          <y>70</y>
-         <width>461</width>
-         <height>751</height>
+         <width>311</width>
+         <height>521</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="added_filters"/>
@@ -310,8 +310,8 @@ color:Black
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>831</y>
-         <width>461</width>
+         <y>610</y>
+         <width>311</width>
          <height>91</height>
         </rect>
        </property>
@@ -355,10 +355,10 @@ color:white;</string>
      <widget class="QWidget" name="widget_3" native="true">
       <property name="geometry">
        <rect>
-        <x>940</x>
+        <x>750</x>
         <y>10</y>
-        <width>951</width>
-        <height>951</height>
+        <width>661</width>
+        <height>751</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -371,10 +371,10 @@ border-color: white;</string>
       <widget class="QFrame" name="frame_3">
        <property name="geometry">
         <rect>
-         <x>60</x>
-         <y>50</y>
-         <width>831</width>
-         <height>341</height>
+         <x>10</x>
+         <y>40</y>
+         <width>631</width>
+         <height>281</height>
         </rect>
        </property>
        <property name="frameShape">
@@ -386,7 +386,7 @@ border-color: white;</string>
        <widget class="QLabel" name="label_4">
         <property name="geometry">
          <rect>
-          <x>320</x>
+          <x>220</x>
           <y>30</y>
           <width>181</width>
           <height>20</height>
@@ -412,8 +412,8 @@ border:none;</string>
          <rect>
           <x>40</x>
           <y>60</y>
-          <width>761</width>
-          <height>261</height>
+          <width>561</width>
+          <height>201</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -426,10 +426,10 @@ border:none;</string>
       <widget class="QFrame" name="frame_4">
        <property name="geometry">
         <rect>
-         <x>60</x>
-         <y>420</y>
-         <width>831</width>
-         <height>401</height>
+         <x>10</x>
+         <y>360</y>
+         <width>631</width>
+         <height>311</height>
         </rect>
        </property>
        <property name="frameShape">
@@ -441,7 +441,7 @@ border:none;</string>
        <widget class="QLabel" name="label_5">
         <property name="geometry">
          <rect>
-          <x>320</x>
+          <x>240</x>
           <y>40</y>
           <width>181</width>
           <height>20</height>
@@ -467,8 +467,8 @@ border:none;</string>
          <rect>
           <x>40</x>
           <y>90</y>
-          <width>761</width>
-          <height>261</height>
+          <width>561</width>
+          <height>201</height>
          </rect>
         </property>
         <property name="styleSheet">
@@ -481,8 +481,8 @@ border:none;</string>
       <widget class="QPushButton" name="pushButton_4">
        <property name="geometry">
         <rect>
-         <x>280</x>
-         <y>860</y>
+         <x>150</x>
+         <y>690</y>
          <width>391</width>
          <height>40</height>
         </rect>
