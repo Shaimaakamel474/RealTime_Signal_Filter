@@ -52,6 +52,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Widget_Touchpad.mouseMoveEvent = self.calculateMousePosition
 
         self.load_button.clicked.connect(self.load_signal)  
+        self.clear_button.clicked.connect(self.clear_graphs)
 
         self.Delete_combox.currentIndexChanged.connect(self.Delete_Options)
 
@@ -246,6 +247,10 @@ class MainWindow(QtWidgets.QMainWindow):
             # print("b", self.pasez.y_a_complex)
             # print("zeros after extend : ", zeros)
             # print("poles after extend : ", poles)
+
+            self.zeros_postions.extend((z.real, np.real(z.imag)) for z in zeros)
+            self.poles_postions.extend((p.real, np.real(p.imag)) for p in poles)
+
 
             w, h = signal.freqz_zpk(zeros, poles, 1.0)
             phase = np.unwrap(np.angle(h))

@@ -698,39 +698,12 @@ border-color: white;
         <x>30</x>
         <y>630</y>
         <width>541</width>
-        <height>231</height>
+        <height>201</height>
        </rect>
       </property>
       <property name="styleSheet">
        <string notr="true">background-color:grey;</string>
       </property>
-      <widget class="QPushButton" name="load_button">
-       <property name="geometry">
-        <rect>
-         <x>210</x>
-         <y>190</y>
-         <width>93</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color:#0062cc;
-border-radius:10px;
-border-style: solid;
-border-width: 1px;
-border-color: #0062cc;
-color:white;</string>
-       </property>
-       <property name="text">
-        <string>Load Signal</string>
-       </property>
-      </widget>
       <widget class="QWidget" name="Widget_Touchpad" native="true">
        <property name="geometry">
         <rect>
@@ -865,6 +838,60 @@ border-color: black;
          <blue>255</blue>
         </color>
        </brush>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="load_button">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>850</y>
+        <width>93</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+      </property>
+      <property name="text">
+       <string>Load Signal</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="clear_button">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>850</y>
+        <width>93</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+      </property>
+      <property name="text">
+       <string>Clear</string>
       </property>
      </widget>
     </widget>
