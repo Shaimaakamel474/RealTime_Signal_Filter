@@ -152,7 +152,7 @@ color:white;</string>
       <widget class="QPushButton" name="button_ClearPoles">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>210</x>
          <y>140</y>
          <width>93</width>
          <height>31</height>
@@ -260,8 +260,8 @@ color:white;</string>
       <widget class="QPushButton" name="button_Save">
        <property name="geometry">
         <rect>
-         <x>220</x>
-         <y>270</y>
+         <x>90</x>
+         <y>250</y>
          <width>93</width>
          <height>31</height>
         </rect>
@@ -287,8 +287,8 @@ color:white;</string>
       <widget class="QPushButton" name="Button_Export">
        <property name="geometry">
         <rect>
-         <x>220</x>
-         <y>320</y>
+         <x>210</x>
+         <y>250</y>
          <width>93</width>
          <height>31</height>
         </rect>
@@ -328,13 +328,13 @@ color:white;</string>
         <string>Add Conjugates</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="Button_Swap">
+      <widget class="QComboBox" name="comboBox_swap">
        <property name="geometry">
         <rect>
-         <x>230</x>
-         <y>140</y>
-         <width>93</width>
-         <height>28</height>
+         <x>350</x>
+         <y>141</y>
+         <width>131</width>
+         <height>31</height>
         </rect>
        </property>
        <property name="styleSheet">
@@ -345,9 +345,102 @@ border-width: 1px;
 border-color: #0062cc;
 color:white;</string>
        </property>
-       <property name="text">
-        <string>Swap</string>
+       <item>
+        <property name="text">
+         <string>Swap</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Poles_to_zeros</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Zeros_to_Poles</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Swap_All</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QComboBox" name="Combox_Filters">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>290</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Filters</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Butterworth</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Chebyshev_I</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Chebyshev_II</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bessel</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Elliptic</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QComboBox" name="Combox_Filters_type">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>290</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>LPF</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>HPF</string>
+        </property>
+       </item>
       </widget>
      </widget>
      <widget class="QLabel" name="label_5">
@@ -540,7 +633,7 @@ border-color: white;
       <property name="styleSheet">
        <string notr="true">background-color:grey;</string>
       </property>
-      <widget class="QPushButton" name="Button_Load">
+      <widget class="QPushButton" name="load_button">
        <property name="geometry">
         <rect>
          <x>210</x>
