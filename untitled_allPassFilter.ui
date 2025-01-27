@@ -216,7 +216,7 @@ QComboBox QAbstractItemView {
                        <property name="styleSheet">
                         <string notr="true">QPushButton {
     width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    background-color: rgb(13, 162, 182); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
     border-radius: 10px;
     text-align: center;
@@ -401,7 +401,7 @@ QGroupBox::indicator {
                        <property name="styleSheet">
                         <string notr="true">QPushButton {
     width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    background-color: rgb(13, 162, 182); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
     border-radius: 10px;
     text-align: center;
@@ -442,7 +442,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
                        <property name="styleSheet">
                         <string notr="true">QPushButton {
     width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    background-color: rgb(13, 162, 182); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
     border-radius: 10px;
     text-align: center;
@@ -515,7 +515,7 @@ QGroupBox::indicator {
 
 QPushButton {
     width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    background-color: rgb(13, 162, 182); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
     border-radius: 10px;
     text-align: center;
@@ -564,7 +564,7 @@ color:red /* Replace with the corresponding color value for --darkest-color in y
               <property name="styleSheet">
                <string notr="true">QPushButton {
     width: 50%;
-    background-color: rgb(182, 13, 13); /* Replace with the corresponding color value for --dark-grey in your application */
+    background-color: rgb(13, 162, 182); /* Replace with the corresponding color value for --dark-grey in your application */
     color: white;
     border-radius: 10px;
     text-align: center;
@@ -760,7 +760,7 @@ QGroupBox::indicator {
                      <property name="styleSheet">
                       <string notr="true">QPushButton {
     width: 50%;
-    background-color: rgb(182, 13, 13);
+    background-color: rgb(13, 162, 182);
     color: white;
     border-radius: 10px;
     text-align: center;
