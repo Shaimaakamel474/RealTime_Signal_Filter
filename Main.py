@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import QWidget
 import matplotlib.pyplot as plt
 from cmath import *
 from numpy import *
+from scipy.signal import tf2zpk
 import sys
 from PyQt5.QtWidgets import QDialog
 from scipy import signal
@@ -18,9 +19,14 @@ import matplotlib.pyplot as plt
 import pyqtgraph as pg
 import pandas as pd
 matplotlib.use('Qt5Agg')
-
-
-
+import numpy as np
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import simpleSplit
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from AllPass import MyDialog
+import csv
 class MplCanvas(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=7, height=4, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
@@ -47,20 +53,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.load_button.clicked.connect(self.load_signal)  
 
-        
-        
-
-        self.button_ClearZeros.clicked.connect(lambda : self.delete_zeros())
-        self.button_ClearPoles.clicked.connect(lambda : self.delete_poles())
-        self.Button_Clear.clicked.connect(lambda : self.delete_all())
+        self.Delete_combox.currentIndexChanged.connect(self.Delete_Options)
 
         self.comboBox_swap.currentIndexChanged.connect(lambda indx : self.swap_markers_and_positions(indx))
         self.button_Save.clicked.connect(self.save_poles_zeros_to_csv)
         self.Button_Export.clicked.connect(self.open_file_dialog)
 
+        # self.Save_Method_Combox.currentIndexChanged.connect(self.save_and_reload_filter)
 
         self.Combox_Filters.currentIndexChanged.connect(lambda : self.Display_Filters())
         self.Combox_Filters_type.currentIndexChanged.connect(lambda : self.Display_Filters())
+        
+        self.Second_Window.clicked.connect(self.Open_Second_Window)
+
+
+        self.Combox_Generat_C_code.currentIndexChanged.connect(lambda : self.realize_and_export())
                 # Plot unit circle
         self.plot_unit_circle()
         
@@ -96,6 +103,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
     def setup_layouts(self):
+
+        self.Real_Signal.setBackground('w')
+        self.Filtered_Signal.setBackground('w')
         self.canvas1 = MplCanvas(self, width=10, height=10, dpi=100)
         self.canvas1.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.layout1 = QtWidgets.QVBoxLayout()
@@ -134,29 +144,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
-
-# plot the unit circle widget
-    def plot_unit_circle(self):
-    # Plot unit circle using Matplotlib on the canvas
-        self.draw_circle()
-
-        # Hide the plot widget's axes
-        self.circle_graph.setAxisItems({})
-        self.circle_graph.setRange(QtCore.QRectF(-1.1, -1.1, 2.2, 2.2))
-
-        # Set the canvas background color to white
-        self.canvas1.setStyleSheet("background-color: white;")
-
-        # Resize the canvas to fill the entire plot widget
-        self.canvas1.setGeometry(self.circle_graph.geometry())
-                # Set the limits to ensure the origin is at the center of the circle
-        self.canvas1.axes.set_xlim(-1.1, 1.1)
-        self.canvas1.axes.set_ylim(-1.1, 1.1)
-        self.canvas1.draw()
-        self.circle_graph.setCentralItem(self.graph)
-        self.layout1.setContentsMargins(0, 0, 0, 0)
-        self.circle_graph.setLayout(self.layout1)
-    
     def plot_unit_circle(self):
         # Define the angles for the unit circle
         angles = np.linspace(0, 2 * np.pi, 1000)
@@ -406,6 +393,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.poles_postions = []
         self.redraw_plot()
         self.plot_frequency_response()
+    
+
+    def Delete_Options(self):
+        state=self.Delete_combox.currentText()
+        if state=="ALL_Poles":
+            self.delete_poles()
+        elif state=="ALL_Zeros":
+            self.delete_zeros()
+        elif state=="Delete Both":
+            self.delete_all()
+        self.Delete_combox.setCurrentText("Delete")
+
+
 
     def swap_markers_and_positions(self , index):
         if index == 1 and len(self.poles) > 0:
@@ -597,7 +597,7 @@ class MainWindow(QtWidgets.QMainWindow):
                         added_conjugates.add((x, -y))
                     else:
                         marker = self.canvas1.axes.scatter(x, y, color='b', marker='o', s=100, 
-                                                        facecolors='none', edgecolors='b', linewidths=2)
+                                                           facecolors='none', edgecolors='b', linewidths=2)
                         self.zeros.append((marker, None))
                         self.zeros_postions.append((x, y))
         
@@ -782,6 +782,246 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
+    def ensure_conjugates(self):
+        """
+        Ensure that every pole and zero has a conjugate. 
+        If the conjugate marker is not None, add the conjugate position.
+        If the conjugate marker is None, do nothing.
+        """
+        # Ensure conjugates for poles
+        updated_poles = []
+        poles_positions = self.poles_postions
+        zeros_positions = self.zeros_postions
+
+        for (x, y), marker in zip(poles_positions, self.poles):
+            if marker[1] is not None:  # If conjugate marker is not None
+                conjugate = (x, -y)  # The conjugate position
+                if conjugate not in poles_positions:  # Add conjugate position if it doesn't exist
+                    updated_poles.append(conjugate)
+            # If marker[1] is None, do nothing
+
+        # Add new conjugates to poles
+        poles_positions.extend(updated_poles)
+
+        # Ensure conjugates for zeros
+        updated_zeros = []
+        for (x, y), marker in zip(zeros_positions, self.zeros):
+            if marker[1] is not None:  # If conjugate marker is not None
+                conjugate = (x, -y)  # The conjugate position
+                if conjugate not in zeros_positions:  # Add conjugate position if it doesn't exist
+                    updated_zeros.append(conjugate)
+            # If marker[1] is None, do nothing
+
+        # Add new conjugates to zeros
+        zeros_positions.extend(updated_zeros)
+
+        return poles_positions, zeros_positions
+
+
+    def direct_form_II(self, poles, zeros):
+        """
+        Perform Direct Form II realization of the filter.
+        """
+        numerator = [1]
+        denominator = [1]
+        for x, y in poles:
+            denominator = np.convolve(denominator, [1, -complex(x, y)])
+        for x, y in zeros:
+            numerator = np.convolve(numerator, [1, -complex(x, y)])
+        return numerator, denominator
+
+    def cascade_form(self, poles, zeros):
+        """
+        Perform Cascade realization (splitting into second-order sections).
+        """
+        sections = []
+        if len(poles) % 2 != 0 or len(zeros) % 2 != 0:
+            raise ValueError("Number of poles and zeros must be even for cascade form.")
+
+        for i in range(0, len(poles), 2):
+            section_poles = poles[i:i+2]
+            section_zeros = zeros[i:i+2]
+
+            numerator = [1]
+            denominator = [1]
+
+            for x, y in section_poles:
+                denominator = np.convolve(denominator, [1, -complex(x, y)])
+            for x, y in section_zeros:
+                numerator = np.convolve(numerator, [1, -complex(x, y)])
+
+            sections.append((numerator, denominator))
+        return sections
+
+    def export_to_C_code(self, numerator, denominator, method, section_index=None):
+        """
+        Export the filter realization as C code.
+        """
+        if method == 'direct_form_II':
+            code = f"""
+#include <complex.h>  // For complex numbers
+
+double complex b[] = {{{', '.join(f'{coef.real} + {coef.imag}*I' for coef in numerator)}}};
+double complex a[] = {{{', '.join(f'{coef.real} + {coef.imag}*I' for coef in denominator[1:])}}};
+
+double complex x[{len(numerator)}] = {{0}};  // Input buffer
+double complex y[{len(denominator)}] = {{0}};  // Output buffer
+
+double complex filter(double complex input) {{
+    for (int i = {len(numerator)-1}; i > 0; i--) {{
+        x[i] = x[i-1];  // Shift input
+        y[i] = y[i-1];  // Shift output
+    }}
+
+    x[0] = input;
+    y[0] = 0 + 0*I;
+
+    for (int i = 0; i < {len(numerator)}; i++) {{
+        y[0] += b[i] * x[i];
+    }}
+    for (int i = 1; i < {len(denominator)}; i++) {{
+        y[0] -= a[i] * y[i];
+    }}
+
+    return y[0];
+}}
+
+int main() {{
+    double complex input_signal[] = {{1 + 0*I, 2 + 1*I, 3 - 1*I, 0 + 0*I}};
+    int n = sizeof(input_signal) / sizeof(input_signal[0]);
+
+    printf("Filtered output:\\n");
+    for (int i = 0; i < n; i++) {{
+        double complex output = filter(input_signal[i]);
+        printf("Input: %.2f%+.2fi, Output: %.2f%+.2fi\\n",
+               creal(input_signal[i]), cimag(input_signal[i]),
+               creal(output), cimag(output));
+    }}
+
+    return 0;
+}}
+"""
+        elif method == 'cascade_form':
+            code = f"""
+#include <complex.h>  // For complex numbers
+
+// Section {section_index + 1}
+double complex b{section_index + 1}[] = {{{', '.join(f'{coef.real} + {coef.imag}*I' for coef in numerator)}}};
+double complex a{section_index + 1}[] = {{{', '.join(f'{coef.real} + {coef.imag}*I' for coef in denominator[1:])}}};
+
+double complex x{section_index + 1}[{len(numerator)}] = {{0}};  // Input buffer
+double complex y{section_index + 1}[{len(denominator)}] = {{0}};  // Output buffer
+
+double complex filter{section_index + 1}(double complex input) {{
+    for (int i = {len(numerator)-1}; i > 0; i--) {{
+        x{section_index + 1}[i] = x{section_index + 1}[i-1];  // Shift input
+        y{section_index + 1}[i] = y{section_index + 1}[i-1];  // Shift output
+    }}
+
+    x{section_index + 1}[0] = input;
+    y{section_index + 1}[0] = 0 + 0*I;
+
+    for (int i = 0; i < {len(numerator)}; i++) {{
+        y{section_index + 1}[0] += b{section_index + 1}[i] * x{section_index + 1}[i];
+    }}
+    for (int i = 1; i < {len(denominator)}; i++) {{
+        y{section_index + 1}[0] -= a{section_index + 1}[i] * y{section_index + 1}[i];
+    }}
+
+    return y{section_index + 1}[0];
+}}
+
+int main() {{
+    double complex input_signal[] = {{1 + 0*I, 2 + 1*I, 3 - 1*I, 0 + 0*I}};
+    int n = sizeof(input_signal) / sizeof(input_signal[0]);
+
+    printf("Filtered output:\\n");
+    for (int i = 0; i < n; i++) {{
+        double complex output = filter{section_index + 1}(input_signal[i]);
+        printf("Input: %.2f%+.2fi, Output: %.2f%+.2fi\\n",
+               creal(input_signal[i]), cimag(input_signal[i]),
+               creal(output), cimag(output));
+    }}
+
+    return 0;
+}}
+"""
+        return code
+
+    def realize_and_export(self):
+        """
+        Realize the filter and export the C code.
+        """
+        poles_postions , zeros_postions =self.ensure_conjugates()
+        self.filter_type=self.Combox_Generat_C_code.currentText()
+        # Collect the C code for the entire filter
+        full_c_code = f"Generated C Code for Filter Realization\nFilter Type: {self.filter_type}\n\n"
+       
+        if self.filter_type == 'direct_form_II':
+            numerator, denominator = self.direct_form_II(poles_postions, zeros_postions)
+            full_c_code += self.export_to_C_code(numerator, denominator, 'direct_form_II')
+        
+                    # Now save the full C code into a single PDF
+            self.save_pdf(full_c_code, "direct_form_II_filter_C_code.pdf", self.filter_type)
+        elif self.filter_type == 'cascade_form':
+            sections = self.cascade_form(poles_postions, zeros_postions)
+            # Generate the code for each section and append to the full C code string
+            for section_index, (numerator, denominator) in enumerate(sections):
+                section_code = self.export_to_C_code(numerator, denominator, 'cascade_form', section_index)
+                full_c_code += f"\n\n{section_code}"
+
+            # Now save the full C code into a single PDF
+            self.save_pdf(full_c_code, "cascade_filter_C_code.pdf", self.filter_type)
+            self.Combox_Generat_C_code.setCurrentText("Generate_C_Code")
+
+    def save_pdf(self, c_code, filename, filter_type):
+        """
+        Save the generated C code to a PDF file.
+        """
+        # Create a PDF canvas
+        c = canvas.Canvas(filename, pagesize=letter)
+        width, height = letter  # Get the dimensions of the page
+
+        # Set up some styling
+        c.setFont("Times-Roman", 12)  # Use Times-Roman font, size 12 (larger and clearer)
+        margin = 40  # Margin around the text
+        line_height = 16  # Line height for the text
+        text_object = c.beginText(margin, height - margin - 40)  # Start text at the top-left corner
+        text_object.setFont("Times-Roman", 12)
+
+        # Add a title at the top of the page
+        c.setFont("Times-Bold", 16)  # Larger bold font for the title
+        c.drawString(margin, height - margin - 20, f"Filter Design C Code - {filter_type} Form")
+
+        # Set text object font back to regular
+        c.setFont("Times-Roman", 12)
+
+        # Split the C code into lines to fit the page width
+        lines = simpleSplit(c_code, "Times-Roman", 12, width - 2 * margin)
+
+        # Add each line of code to the PDF
+        for line in lines:
+            # If the line doesn't fit in the current page, create a new page
+            if text_object.getY() < margin + line_height:
+                c.drawText(text_object)
+                c.showPage()  # Create a new page
+                text_object = c.beginText(margin, height - margin - 40)
+                text_object.setFont("Times-Roman", 12)
+            text_object.textLine(line)
+
+        # Draw the remaining text on the canvas
+        c.drawText(text_object)
+
+        # Save the PDF file
+        c.showPage()  # Ensure all content is drawn on the last page
+        c.save()
+
+        print(f"PDF saved as {filter_type}")
+
+
+    def Open_Second_Window(self):
+        main = MyDialog(QtWidgets.QDialog)
+        main.exec_()
 
 
 
@@ -792,11 +1032,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
-
-
-
-
-
+# ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -831,7 +1067,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Real_Signal.plotItem.plot(
             x=self.time_list[-500:],
             y=self.mag_list[-500:],
-            pen='b'  # Use 'b' for blue color
+           pen={'color': 'b', 'width': 2}# Use 'b' for blue color
+            
+
         )
 
         zeros_array = np.array(self.zeros_postions).flatten()
@@ -846,7 +1084,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Filtered_Signal.plotItem.plot(
             x=self.time_list[-500:],
             y= np.real(self.filtered_signal[-500:]),
-            pen='b'  # Use 'b' for blue color
+            pen={'color': 'b', 'width': 2}# Use 'b' for blue color  
         )
 
     def load_signal(self):

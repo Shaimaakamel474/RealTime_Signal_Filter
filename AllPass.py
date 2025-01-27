@@ -31,7 +31,25 @@ class Create_checkbox_with_button:
     def __init__(self , checkbox_val , layout_widget):
         self.container_widget = QWidget()
         self.checkbox = QCheckBox(checkbox_val)
+        self.checkbox.setStyleSheet("""
+            color: Black;
+            height: 35px; 
+            font-family: "MS Shell Dlg 2"; /* Set the font */
+            font-size: 9pt; /* Set the font size */
+        """)
         self.button = QPushButton('Delete')
+        self.button.setStyleSheet("""
+            background-color: #0062cc;
+            border-radius: 10px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #0062cc;
+            color: white;
+            height: 35px; 
+            font-family: "MS Shell Dlg 2"; /* Set the font */
+            font-size: 9pt; /* Set the font size */
+        """)
+
         self.container_layout = QHBoxLayout()
         self.container_layout.addWidget(self.checkbox)
         self.container_layout.addWidget(self.button)
@@ -65,15 +83,20 @@ class MyDialog(QtWidgets.QDialog):
 
         self.comboBox.addItem("Select an option")
         self.comboBox.model().item(0).setEnabled(False)
-        self.canvas_phase = MplCanvas(self, width=5, height=4, dpi=100)
+        self.Filter_graph.setBackground('w')
+        self.phase_filter_graph.setBackground('w')
+
+        self.canvas_phase = MplCanvas(self, width=10, height=10, dpi=100)
+        self.canvas_phase.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.layout_phase = QtWidgets.QVBoxLayout()
         self.layout_phase.addWidget(self.canvas_phase)
-
+        self.layout_phase.setContentsMargins(0, 0, 0, 0)
         self.graph = pg.PlotItem() 
-        self.canvas1 = MplCanvas(self, width=5, height=4, dpi=100)
+        self.canvas1 = MplCanvas(self, width=10, height=10, dpi=100)
+        self.canvas1.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.layout1 = QtWidgets.QVBoxLayout()
         self.layout1.addWidget(self.canvas1)
-
+        self.layout1.setContentsMargins(0, 0, 0, 0)
         self.main = main
 
         # self.pushButton_4.clicked.connect(lambda: self.main.plot_frequency_response_phase(self.canvas_phase, self.main.phase_responce_graph, self.layout_phase, flag = True))
