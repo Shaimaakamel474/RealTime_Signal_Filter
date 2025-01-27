@@ -16,6 +16,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import pyqtgraph as pg
+import pandas as pd
 matplotlib.use('Qt5Agg')
 
 
@@ -38,10 +39,13 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi(r'RealTime_Signal_Filter\MainWindow - untitled.ui', self)
+        uic.loadUi(r'MainWindow - untitled.ui', self)
         self.graph = pg.PlotItem()
 
-        
+        self.Widget_Touchpad.setMouseTracking(True)
+        self.Widget_Touchpad.mouseMoveEvent = self.calculateMousePosition
+
+        self.load_button.clicked.connect(self.load_signal)  
 
         self.canvas1 = MplCanvas(self, width=10, height=10, dpi=100)
         self.canvas1.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -76,6 +80,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.zeros_postions = []
         self.poles_postions = []
+
+        self.new_zeros = []
+        self.new_poles = []
+        self.filtered_signal = [0]
+        self.lowpass = False
+
+        self.last_cursor_pos = None
+        self.mag_list = [0]
+        self.time_list = [0]
 
         self.canvas1.mpl_connect('button_press_event', self.on_press)
         self.plot_frequency_response_mag()
@@ -357,7 +370,93 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas1.flush_events()
         self.plot_frequency_response_mag()
             
-            
+    def calculateMousePosition(self, event):
+        cursor_pos = event.pos()
+        # print(f"Mouse Position: ({cursor_pos.x()}, {cursor_pos.y()})")
+        self.magnitude = (cursor_pos.x() + cursor_pos.y() ) /2
+        self.drawGraph()
+
+
+    def drawGraph(self):
+        self.mag_list.append (self.magnitude)
+        self.time_list.append(self.time_list[-1] + 0.0005)
+        # print("Contents of self.mag_list:", self.mag_list)
+
+        if self.time_list[-1] > 1.5:
+            self.Real_Signal.plotItem.setXRange(
+                self.time_list[-1] - 1.5,
+                self.time_list[-1] + 1.5,
+                padding=0
+            )
+            self.hoveredOutput.plotItem.setXRange(
+                self.time_list[-1] - 1.5,
+                self.time_list[-1] + 1.5,
+                padding=0
+            )
+
+        self.Real_Signal.plotItem.clear()
+        self.Real_Signal.plotItem.plot(
+            x=self.time_list[-500:],
+            y=self.mag_list[-500:],
+            pen='b'  # Use 'b' for blue color
+        )
+
+        zeros_array = np.array(self.zeros_postions).flatten()
+        poles_array = np.array(self.poles_postions).flatten()
+        
+        numerator, denominator = signal.zpk2tf(zeros_array, poles_array, 1)
+        self.filtered_signal = signal.lfilter(numerator, denominator, self.mag_list.copy())
+
+        # print(self.filtered_signal)
+
+        self.Filtered_Signal.plotItem.clear()
+        self.Filtered_Signal.plotItem.plot(
+            x=self.time_list[-500:],
+            y= np.real(self.filtered_signal[-500:]),
+            pen='b'  # Use 'b' for blue color
+        )
+
+    def load_signal(self):
+        self.clear_graphs()
+        
+        file_path, _ = QFileDialog.getOpenFileName(self, "Load Signal", "", "CSV Files (*.csv);;All Files (*)")
+        if not file_path:
+            return  # User canceled the file dialog
+
+        try:
+            # Load the signal data from the CSV file
+            data = pd.read_csv(file_path)
+            if 'Time' not in data.columns or 'Signal' not in data.columns:
+                raise ValueError("CSV file must contain 'Time' and 'Signal' columns.")
+
+            time = data['Time'].to_numpy()
+            signal_data = data['Signal'].to_numpy()
+
+            # Plot the original signal
+            self.Real_Signal.plotItem.clear()
+            self.Real_Signal.plotItem.plot(x=time, y=signal_data, pen='b')
+
+            # Apply the filter to the loaded signal
+            zeros_array = np.array(self.zeros_postions).flatten()
+            poles_array = np.array(self.poles_postions).flatten()
+            numerator, denominator = signal.zpk2tf(zeros_array, poles_array, 1)
+            filtered_signal = signal.lfilter(numerator, denominator, signal_data)
+
+            # Plot the filtered signal
+            self.Filtered_Signal.plotItem.clear()
+            self.Filtered_Signal.plotItem.plot(x=time, y=np.real(filtered_signal), pen='g')
+
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to load signal: {str(e)}")
+
+
+
+    
+    def clear_graphs(self):
+        self.mag_list = [0]
+        self.time_list = [0]
+        self.Real_Signal.plotItem.clear()
+        self.Filtered_Signal.plotItem.clear()          
 
 
 

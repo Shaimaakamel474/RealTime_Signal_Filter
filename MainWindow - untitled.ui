@@ -540,7 +540,7 @@ border-color: white;
       <property name="styleSheet">
        <string notr="true">background-color:grey;</string>
       </property>
-      <widget class="QPushButton" name="Button_Load">
+      <widget class="QPushButton" name="load_button">
        <property name="geometry">
         <rect>
          <x>210</x>
