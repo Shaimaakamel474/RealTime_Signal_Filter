@@ -57,8 +57,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.Delete_combox.currentIndexChanged.connect(self.Delete_Options)
 
         self.comboBox_swap.currentIndexChanged.connect(lambda indx : self.swap_markers_and_positions(indx))
-        self.button_Save.clicked.connect(self.save_poles_zeros_to_csv)
-        self.Button_Export.clicked.connect(self.open_file_dialog)
+        # self.button_Save.clicked.connect(self.save_poles_zeros_to_csv)
+        self.Button_Export.clicked.connect(self.reload_filter_from_csv)
+
+        self.Combox_Save.currentIndexChanged.connect(self.save_filter_parameters_to_csv)
 
         # self.Save_Method_Combox.currentIndexChanged.connect(self.save_and_reload_filter)
 
@@ -234,8 +236,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Create a system from zeros and poles
         zeros = [complex(x, y) for x, y in self.zeros_postions]
         poles = [complex(x, y) for x, y in self.poles_postions]
-        print("zeros complex : ", zeros)
-        print("poles complex : ", poles)
+        # print("zeros complex : ", zeros)
+        # print("poles complex : ", poles)
 
         if flag:
             # Extend zeros and poles lists with self.pasez.b and self.pasez.a  
@@ -275,8 +277,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         else:
-            print("zeros : ", zeros)
-            print("poles : ", poles)
+            # print("zeros : ", zeros)
+            # print("poles : ", poles)
 
             # Compute the frequency response
             w, h = signal.freqz_zpk(zeros, poles, 1.0)
@@ -569,134 +571,134 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
             
-    def save_poles_zeros_to_csv(self):
-        """
-        Save poles and zeros data to a CSV file with a dynamic filename.
+    # def save_poles_zeros_to_csv(self):
+    #     """
+    #     Save poles and zeros data to a CSV file with a dynamic filename.
         
-        The filename format is: Filter_{num_poles}Poles_{num_zeros}Zeros.csv
-        Stores x, y coordinates for poles and zeros
-        """
-        filename = f"Filter_{len(self.poles)}Poles_{len(self.zeros)}Zeros.csv"
-        # filename="tst.csv"
-        with open(filename, 'w', newline='') as csvfile:
-            csvwriter = csv.writer(csvfile)
+    #     The filename format is: Filter_{num_poles}Poles_{num_zeros}Zeros.csv
+    #     Stores x, y coordinates for poles and zeros
+    #     """
+    #     filename = f"Filter_{len(self.poles)}Poles_{len(self.zeros)}Zeros.csv"
+    #     # filename="tst.csv"
+    #     with open(filename, 'w', newline='') as csvfile:
+    #         csvwriter = csv.writer(csvfile)
             
-            # Write header
-            csvwriter.writerow(['Type', 'X', 'Y', 'Is_Conjugate'])
+    #         # Write header
+    #         csvwriter.writerow(['Type', 'X', 'Y', 'Is_Conjugate'])
             
-            # Track added conjugate points to avoid duplicates
-            added_conjugates = set()
+    #         # Track added conjugate points to avoid duplicates
+    #         added_conjugates = set()
             
-            # Write poles data
-            for i, (pole, conjugate) in enumerate(self.poles):
-                x, y = self.poles_postions[i]
+    #         # Write poles data
+    #         for i, (pole, conjugate) in enumerate(self.poles):
+    #             x, y = self.poles_postions[i]
                 
-                # Add primary point
-                csvwriter.writerow(['Pole', x, y, conjugate is not None])
+    #             # Add primary point
+    #             csvwriter.writerow(['Pole', x, y, conjugate is not None])
                 
-                # Add conjugate point if it exists and hasn't been added before
-                if conjugate is not None and (x, -y) not in added_conjugates:
-                    csvwriter.writerow(['Pole', x, -y, True])
-                    added_conjugates.add((x, -y))
+    #             # Add conjugate point if it exists and hasn't been added before
+    #             if conjugate is not None and (x, -y) not in added_conjugates:
+    #                 csvwriter.writerow(['Pole', x, -y, True])
+    #                 added_conjugates.add((x, -y))
             
-            # Reset for zeros
-            added_conjugates.clear()
+    #         # Reset for zeros
+    #         added_conjugates.clear()
             
-            # Write zeros data
-            for i, (zero, conjugate) in enumerate(self.zeros):
-                x, y = self.zeros_postions[i]
+    #         # Write zeros data
+    #         for i, (zero, conjugate) in enumerate(self.zeros):
+    #             x, y = self.zeros_postions[i]
                 
-                # Add primary point
-                csvwriter.writerow(['Zero', x, y, conjugate is not None])
+    #             # Add primary point
+    #             csvwriter.writerow(['Zero', x, y, conjugate is not None])
                 
-                # Add conjugate point if it exists and hasn't been added before
-                if conjugate is not None and (x, -y) not in added_conjugates:
-                    csvwriter.writerow(['Zero', x, -y, True])
-                    added_conjugates.add((x, -y))
+    #             # Add conjugate point if it exists and hasn't been added before
+    #             if conjugate is not None and (x, -y) not in added_conjugates:
+    #                 csvwriter.writerow(['Zero', x, -y, True])
+    #                 added_conjugates.add((x, -y))
         
-        print(f"Saved data to {filename}")
+    #     print(f"Saved data to {filename}")
       
 
 
 
-    def open_file_dialog(self):
-        # Open the file dialog and get the file path
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "CSV Files (*.csv);;All Files (*)")
+    # def open_file_dialog(self):
+    #     # Open the file dialog and get the file path
+    #     file_path, _ = QFileDialog.getOpenFileName(self, "Open File", "", "CSV Files (*.csv);;All Files (*)")
         
-        if file_path:
-            self.load_poles_zeros_from_csv(file_path)
+    #     if file_path:
+    #         self.load_poles_zeros_from_csv(file_path)
     
 
-    def load_poles_zeros_from_csv(self, filename):
-        """
-        Load poles and zeros data from a CSV file and replot on the canvas.
+    # def load_poles_zeros_from_csv(self, filename):
+    #     """
+    #     Load poles and zeros data from a CSV file and replot on the canvas.
         
-        Clears existing plots before creating new ones.
-        """
-        # Clear existing plots
-        self.canvas1.axes.clear()
-        self.plot_unit_circle()
+    #     Clears existing plots before creating new ones.
+    #     """
+    #     # Clear existing plots
+    #     self.canvas1.axes.clear()
+    #     self.plot_unit_circle()
         
-        # Reset lists
-        self.poles = []
-        self.poles_postions = []
-        self.zeros = []
-        self.zeros_postions = []
+    #     # Reset lists
+    #     self.poles = []
+    #     self.poles_postions = []
+    #     self.zeros = []
+    #     self.zeros_postions = []
         
-        # Track added conjugate points to avoid duplicates
-        added_conjugates = set()
+    #     # Track added conjugate points to avoid duplicates
+    #     added_conjugates = set()
         
-        # Read CSV file
-        with open(filename, 'r') as csvfile:
-            csvreader = csv.reader(csvfile)
-            next(csvreader)  # Skip header
+    #     # Read CSV file
+    #     with open(filename, 'r') as csvfile:
+    #         csvreader = csv.reader(csvfile)
+    #         next(csvreader)  # Skip header
             
-            for row in csvreader:
-                point_type, x, y, is_conjugate = row
-                x = float(x)
-                y = float(y)
-                is_conjugate = is_conjugate == 'True'
+    #         for row in csvreader:
+    #             point_type, x, y, is_conjugate = row
+    #             x = float(x)
+    #             y = float(y)
+    #             is_conjugate = is_conjugate == 'True'
                 
-                # Skip if this conjugate point has already been added
-                if is_conjugate and (x, y) in added_conjugates:
-                    continue
+    #             # Skip if this conjugate point has already been added
+    #             if is_conjugate and (x, y) in added_conjugates:
+    #                 continue
                 
-                if point_type == 'Pole':
-                    if is_conjugate:
-                        primary_marker = self.canvas1.axes.scatter(x, y, color='r', marker='x', s=100, linewidths=2)
-                        conjugate_marker = self.canvas1.axes.scatter(x, -y, color='r', marker='x', s=100, linewidths=2)
-                        self.poles.append((primary_marker, conjugate_marker))
-                        self.poles_postions.append((x, y))
+    #             if point_type == 'Pole':
+    #                 if is_conjugate:
+    #                     primary_marker = self.canvas1.axes.scatter(x, y, color='r', marker='x', s=100, linewidths=2)
+    #                     conjugate_marker = self.canvas1.axes.scatter(x, -y, color='r', marker='x', s=100, linewidths=2)
+    #                     self.poles.append((primary_marker, conjugate_marker))
+    #                     self.poles_postions.append((x, y))
                         
-                        # Mark both points as added to prevent duplicates
-                        added_conjugates.add((x, y))
-                        added_conjugates.add((x, -y))
-                    else:
-                        marker = self.canvas1.axes.scatter(x, y, color='r', marker='x', s=100, linewidths=2)
-                        self.poles.append((marker, None))
-                        self.poles_postions.append((x, y))
+    #                     # Mark both points as added to prevent duplicates
+    #                     added_conjugates.add((x, y))
+    #                     added_conjugates.add((x, -y))
+    #                 else:
+    #                     marker = self.canvas1.axes.scatter(x, y, color='r', marker='x', s=100, linewidths=2)
+    #                     self.poles.append((marker, None))
+    #                     self.poles_postions.append((x, y))
                 
-                elif point_type == 'Zero':
-                    if is_conjugate:
-                        primary_marker = self.canvas1.axes.scatter(x, y, color='b', marker='o', s=100, 
-                                                                facecolors='none', edgecolors='b', linewidths=2)
-                        conjugate_marker = self.canvas1.axes.scatter(x, -y, color='b', marker='o', s=100, 
-                                                                    facecolors='none', edgecolors='b', linewidths=2)
-                        self.zeros.append((primary_marker, conjugate_marker))
-                        self.zeros_postions.append((x, y))
+    #             elif point_type == 'Zero':
+    #                 if is_conjugate:
+    #                     primary_marker = self.canvas1.axes.scatter(x, y, color='b', marker='o', s=100, 
+    #                                                             facecolors='none', edgecolors='b', linewidths=2)
+    #                     conjugate_marker = self.canvas1.axes.scatter(x, -y, color='b', marker='o', s=100, 
+    #                                                                 facecolors='none', edgecolors='b', linewidths=2)
+    #                     self.zeros.append((primary_marker, conjugate_marker))
+    #                     self.zeros_postions.append((x, y))
                         
-                        # Mark both points as added to prevent duplicates
-                        added_conjugates.add((x, y))
-                        added_conjugates.add((x, -y))
-                    else:
-                        marker = self.canvas1.axes.scatter(x, y, color='b', marker='o', s=100, 
-                                                           facecolors='none', edgecolors='b', linewidths=2)
-                        self.zeros.append((marker, None))
-                        self.zeros_postions.append((x, y))
+    #                     # Mark both points as added to prevent duplicates
+    #                     added_conjugates.add((x, y))
+    #                     added_conjugates.add((x, -y))
+    #                 else:
+    #                     marker = self.canvas1.axes.scatter(x, y, color='b', marker='o', s=100, 
+    #                                                        facecolors='none', edgecolors='b', linewidths=2)
+    #                     self.zeros.append((marker, None))
+    #                     self.zeros_postions.append((x, y))
         
-        # Redraw the canvas
-        self.canvas1.draw()
-        print(f"Loaded data from {filename}")
+    #     # Redraw the canvas
+    #     self.canvas1.draw()
+    #     print(f"Loaded data from {filename}")
 
      
 
@@ -1120,9 +1122,240 @@ int main() {{
         main.exec_()
 
 
+# ////////////////////////////////////////////////////////////////////////////////
+
+
+    def inverse_direct_form_II(self, numerator, denominator):
+        """
+        Inverse Direct Form II: Compute poles and zeros from filter coefficients.
+        """
+        zeros = np.roots(numerator)
+        poles = np.roots(denominator)
+        return zeros, poles
+    def inverse_cascade_form(self, sections):
+        """
+        Inverse Cascade Form: Compute poles and zeros from second-order sections.
+        Each section contains full polynomial coefficients for numerator and denominator.
+        """
+        zeros = []
+        poles = []
+        
+        for numerator, denominator in sections:
+            # Compute roots for each section using the polynomial coefficients
+            section_zeros = np.roots(numerator)
+            section_poles = np.roots(denominator)
+            
+            # Add non-zero roots to the results
+            zeros.extend([z for z in section_zeros if abs(z) > 1e-10])
+            poles.extend([p for p in section_poles if abs(p) > 1e-10])
+        
+        return np.array(zeros), np.array(poles)
+
+
+    def regenerate_poles_and_zeros(self, poles_positions, zeros_positions):
+        """
+        Regenerate `self.poles` and `self.zeros` from given `poles_positions` and `zeros_positions`.
+        """
+
+        self.canvas1.axes.clear()
+        self.plot_unit_circle()
+        poles_positions = [(p.real, p.imag) for p in poles_positions]
+        zeros_positions = [(z.real, z.imag) for z in zeros_positions]
+
+        # Clear existing data
+        self.poles = []
+        self.zeros = []
+        self.poles_postions = []
+        self.zeros_postions = []
+
+        # Helper function to check if a conjugate exists
+        def has_conjugate(position, position_list):
+            x, y = position
+            return (x, -y) in position_list
+
+        # Process poles
+        for x, y in poles_positions:
+            if has_conjugate((x, y), poles_positions):
+                # Add conjugate pole
+                conjugate_marker = self.canvas1.axes.scatter(x, -y, color='r', marker='x', s=100, linewidths=2)
+                primary_marker = self.canvas1.axes.scatter(x, y, color='r', marker='x', s=100, linewidths=2)
+                self.poles.append((primary_marker, conjugate_marker))
+            else:
+                # Add single pole
+                marker = self.canvas1.axes.scatter(x, y, color='r', marker='x', s=100, linewidths=2)
+                self.poles.append((marker, None))
+            self.poles_postions.append((x, y))
+
+        # Process zeros
+        for x, y in zeros_positions:
+            if has_conjugate((x, y), zeros_positions):
+                # Add conjugate zero
+                conjugate_marker = self.canvas1.axes.scatter(x, -y, color='b', marker='o', s=100,
+                                                            facecolors='none', edgecolors='b', linewidths=2)
+                primary_marker = self.canvas1.axes.scatter(x, y, color='b', marker='o', s=100,
+                                                        facecolors='none', edgecolors='b', linewidths=2)
+                self.zeros.append((primary_marker, conjugate_marker))
+            else:
+                # Add single zero
+                marker = self.canvas1.axes.scatter(x, y, color='b', marker='o', s=100,
+                                                    facecolors='none', edgecolors='b', linewidths=2)
+                self.zeros.append((marker, None))
+            self.zeros_postions.append((x, y))
+
+        self.canvas1.draw()
+
+    def save_filter_parameters_to_csv(self):
+        """
+        Save filter parameters and type to a CSV file.
+
+        Saves the filter type and corresponding parameters (numerator/denominator or second-order sections)
+        to a CSV file based on the selected filter type from the ComboBox.
+        """
+        # Get the selected filter type
+        filter_type = self.Combox_Save.currentText()  # Assuming PyQt QComboBox usage
+        self.Combox_Save.setCurrentText("save")
+        filename = f"Filter_{filter_type}.csv"
+
+        # Ensure conjugates for poles and zeros
+        poles_positions, zeros_positions = self.ensure_conjugates()
+
+        if not poles_positions or not zeros_positions:
+            print("Error: Poles or zeros are invalid.")
+            return
+
+        try:
+            with open(filename, 'w', newline='') as csvfile:
+                csvwriter = csv.writer(csvfile)
+
+                # Write the filter type header
+                csvwriter.writerow(['FilterType', filter_type])
+
+                if filter_type == "direct_form_II":
+                    # Compute and save Direct Form II parameters
+                    numerator, denominator = self.direct_form_II(poles_positions, zeros_positions)
+
+                    # Save numerator and denominator as real and imaginary parts
+                    csvwriter.writerow(['Numerator_Real', 'Numerator_Imag'])
+                    for z in numerator:
+                        csvwriter.writerow([z.real, z.imag])
+
+                    csvwriter.writerow(['Denominator_Real', 'Denominator_Imag'])
+                    for p in denominator:
+                        csvwriter.writerow([p.real, p.imag])
+
+                elif filter_type == "cascade_form":
+                    sections = self.cascade_form(poles_positions, zeros_positions)
+                
+                    # Write number of sections first
+                    csvwriter.writerow(['Number_of_Sections', len(sections)])
+                    
+                    # For each section, write its order and coefficients
+                    for i, (num, den) in enumerate(sections):
+                        csvwriter.writerow([f'Section_{i}_Order', len(num)-1])
+                        
+                        # Write numerator coefficients
+                        csvwriter.writerow([f'Section_{i}_Numerator_Real'] + [coef.real for coef in num])
+                        csvwriter.writerow([f'Section_{i}_Numerator_Imag'] + [coef.imag for coef in num])
+                        
+                        # Write denominator coefficients
+                        csvwriter.writerow([f'Section_{i}_Denominator_Real'] + [coef.real for coef in den])
+                        csvwriter.writerow([f'Section_{i}_Denominator_Imag'] + [coef.imag for coef in den])
+
+            
+                        # Update the ComboBox or UI status
+            
+            print(f"Filter parameters successfully saved to {filename}")
 
 
 
+        except Exception as e:
+            print(f"Error saving filter parameters: {e}")
+
+   
+   
+    def reload_filter_from_csv(self):
+        """
+        Reload filter parameters from a CSV file, reconstruct the filter, and replot the poles and zeros.
+        """
+        # Prompt user to select a CSV file
+        filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "CSV Files (*.csv);;All Files (*)")
+
+        if not filename:
+            print("No file selected.")
+            return
+
+        try:
+            with open(filename, 'r') as csvfile:
+                csvreader = csv.reader(csvfile)
+                rows = list(csvreader)
+
+            # Read filter type
+            filter_type = rows[0][1]
+
+            if filter_type == "direct_form_II":
+                # Extract numerator and denominator coefficients
+                numerator = []
+                denominator = []
+
+                # Parse numerator
+                idx = rows.index(['Numerator_Real', 'Numerator_Imag']) + 1
+                while rows[idx][0] != 'Denominator_Real':
+                    real, imag = map(float, rows[idx])
+                    numerator.append(complex(real, imag))
+                    idx += 1
+
+                # Parse denominator
+                idx += 1
+                while idx < len(rows):
+                    real, imag = map(float, rows[idx])
+                    denominator.append(complex(real, imag))
+                    idx += 1
+
+                # Compute poles and zeros
+                zeros, poles = self.inverse_direct_form_II(numerator, denominator)
+
+            elif filter_type == "cascade_form":
+                num_sections = int(rows[1][1])
+                sections = []
+                current_row = 2
+
+                for i in range(num_sections):
+                    # Read section order
+                    order = int(rows[current_row][1])
+                    current_row += 1
+
+                    # Read numerator coefficients
+                    num_real = [float(x) for x in rows[current_row][1:]]
+                    current_row += 1
+                    num_imag = [float(x) for x in rows[current_row][1:]]
+                    current_row += 1
+                    
+                    # Construct numerator polynomial coefficients
+                    numerator = [complex(r, i) for r, i in zip(num_real, num_imag)]
+
+                    # Read denominator coefficients
+                    den_real = [float(x) for x in rows[current_row][1:]]
+                    current_row += 1
+                    den_imag = [float(x) for x in rows[current_row][1:]]
+                    current_row += 1
+                    
+                    # Construct denominator polynomial coefficients
+                    denominator = [complex(r, i) for r, i in zip(den_real, den_imag)]
+
+                    sections.append((numerator, denominator))
+
+                zeros, poles = self.inverse_cascade_form(sections)
+        
+            else:
+                raise ValueError(f"Unsupported filter type: {filter_type}")
+
+            # Regenerate and plot the poles and zeros
+            self.regenerate_poles_and_zeros(poles, zeros)
+            print(f"Filter reloaded and replotted from {filename}")
+
+        except Exception as e:
+            print(f"Error reloading filter: {e}")
+    
 
 
 

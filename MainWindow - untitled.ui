@@ -181,33 +181,6 @@ color:white;</string>
         <string>Redo</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="button_Save">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>190</y>
-         <width>131</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color:#0062cc;
-border-radius:10px;
-border-style: solid;
-border-width: 1px;
-border-color: #0062cc;
-color:white;</string>
-       </property>
-       <property name="text">
-        <string>Save</string>
-       </property>
-      </widget>
       <widget class="QPushButton" name="Button_Export">
        <property name="geometry">
         <rect>
@@ -469,6 +442,44 @@ color:white;</string>
        <item>
         <property name="text">
          <string>Delete Both</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QComboBox" name="Combox_Save">
+       <property name="geometry">
+        <rect>
+         <x>90</x>
+         <y>190</y>
+         <width>131</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:#0062cc;
+border-radius:10px;
+border-style: solid;
+border-width: 1px;
+border-color: #0062cc;
+color:white;</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>save</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>direct_form_II</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>cascade_form</string>
         </property>
        </item>
       </widget>
